@@ -1,0 +1,181 @@
+.CollectionGrid--Wrapper {
+    display: flex;
+    width: 100%;
+    flex-wrap: wrap;
+    overflow: hidden;
+    position: relative;
+    color: var(--main_color_12);
+    padding: 16px;
+ 
+}
+
+.CollectionGrid--Description,
+.CollectionGrid--Title{
+    color: var(--main_color_12);
+}
+
+.CollectionGrid--Image__Link {
+    width: 100%;
+    height: 100%
+}
+
+.CollectionGrid__Image {
+    width: 100%;
+    height: 100%;
+    object-position: center;
+    object-fit: cover
+}
+
+.CollectionGrid--ImageWrapper {
+    width: 100%;
+    position: relative;
+    text-align: center;
+    overflow: hidden;
+    cursor: pointer;
+    pointer-events: all;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 16px;
+    border-radius: 30px;
+}
+
+.CollectionGrid--ImageWrapper::after {
+    content: '';
+    background-color: var(--main_color_11);
+    opacity: 0.2;
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    top: 0;
+    left: 0;
+}
+
+.CollectionGrid--Mobile__Grid {
+    display: flex;
+    flex-wrap: wrap;
+    display: block;
+    width: 50%;
+    height: 200px
+}
+
+.CollectionGrid--GridFont__Size {
+    font-size: 24px
+}
+
+.CollectionGrid--HoverButton {
+    opacity: 1;
+    position: relative;
+    left: 0;
+    right: 0;
+    width: fit-content;
+    margin-left: auto;
+    margin-right: auto
+}
+
+.CollectionGrid--ImageWrapper__Large,
+.CollectionGrid--ImageWrapper__Small {
+    width: 100%;
+}
+
+.CollectionGrid--Content {
+    position: absolute;
+    z-index: 1;
+    padding: 0 32px;
+    width: 100%;
+}
+
+@media (min-width:768px) {
+    .CollectionGrid--Content {
+        max-width: 324px;
+        padding: 0
+    }
+
+
+    .CollectionGrid--ImageWrapper__Small .CollectionGrid--Content {
+        max-width: 248px
+    }
+
+    .CollectionGrid--Mobile__Grid {
+        display: flex;
+        flex-wrap: wrap;
+        display: block;
+        width: unset;
+        height: unset
+    }
+
+    .CollectionGrid--Wrapper {
+        display: flex;
+        width: 100%;
+        flex-wrap: wrap;
+        overflow: hidden;
+        gap: 32px;
+    }
+
+    .CollectionGrid--GridFont__Size {
+        font-size: 48px
+    }
+
+    .CollectionGrid--ImageWrapper__Small {
+        width: 640px
+    }
+
+    .CollectionGrid--ImageWrapper__Full {
+        width: 100%
+    }
+
+    .CollectionGrid--ImageWrapper__Large {
+        width: 640px;
+        object-fit: contain;
+        object-position: center
+    }
+
+    .CollectionGrid--DesktopLayout__Full {
+        width: 100%;
+        display: flex;
+        flex-wrap: wrap
+    }
+
+    .CollectionGrid--DesktopLayout__Grid {
+        display: flex;
+        flex-wrap: wrap;
+        flex: 1;
+        object-fit: cover;
+        object-position: center;
+    
+    }
+}
+
+@media (min-width:1024px) {
+
+    .CollectionGrid--Wrapper {
+        padding: 64px;
+        justify-content: space-between;
+    }
+
+    .CollectionGrid--Content,
+    .CollectionGrid--ImageWrapper__Small .CollectionGrid--Content {
+        max-width: 576px;
+        padding: 0
+    }
+
+    .CollectionGrid--HoverButton {
+        transition: opacity .3s ease;
+        opacity: 1;
+        margin-top: 16px;
+        padding-top: 12px;
+        padding-bottom: 12px;
+        min-width: 256px;
+    }
+
+
+    .CollectionGrid--GridFont__Size {
+        font-size: 64px
+    }
+}
+
+@media (min-width:1920px) {
+    .CollectionGrid--GridFont__Size {
+        font-size: 80px
+    }
+}

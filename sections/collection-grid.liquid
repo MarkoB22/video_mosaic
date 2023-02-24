@@ -1,0 +1,465 @@
+<link rel="stylesheet" href="{{ 'collection-grid.css' | asset_url }}" media="print" onload="this.media='all'">
+<noscript>{{ 'collection-grid.css' | asset_url | stylesheet_tag }}</noscript>
+{% capture section_settings %}
+{
+"control_var": true,
+"autoplay": {{ section.settings.autoplay | json }},
+"muted": {{ section.settings.muted | json }},
+"controls": {{ section.settings.controls | json }},
+"plh_desk": {{ section.settings.poster_urld | image_url | json }},
+"plh_mob": {{ section.settings.poster_urlm | image_url | json }},
+"plh": {{ section.settings.plh | json }},
+"viewport": {{ section.settings.viewport | json }},
+"loop": {{ section.settings.loop | json }},
+"videom": {{ section.settings.video_urlm | json }},
+"videod": {{ section.settings.video_urld | json }},
+"pause":{{ section.settings.viewport_pause | json }},
+"id":{{ section.id | json }},
+"aspect":false
+}
+{% endcapture %}
+{% assign colorGroup = "colorGroup--" | append: section.settings.colorGroup %}
+<animation-wrapper class="CollectionGrid--Wrapper {{ colorGroup }}">
+
+  {% assign modulNumber = section.blocks.size | modulo: 2 %}
+  {%- for block in section.blocks -%}
+  {% capture gridType %}{% cycle 'CollectionGrid--ImageWrapper__Small', 'CollectionGrid--ImageWrapper__Large',
+  'CollectionGrid--ImageWrapper__Large', 'CollectionGrid--ImageWrapper__Small' %}{% endcapture %}
+  {% if section.settings.grid_type == "1_per_row" %}
+  {% assign classes_grid = "CollectionGrid--DesktopLayout__Full" %}
+  {% elsif section.settings.grid_type == "2_Grid" %}
+  {% assign classes_grid = "CollectionGrid--DesktopLayout__Grid" %}
+  {% elsif section.settings.grid_type == "2_Masonary" %}
+  {% if forloop.last and modulNumber > 0 %}
+  {% assign classes_grid = "CollectionGrid--ImageWrapper__Full" %}
+  {% else %}
+  {% assign classes_grid = gridType %}
+  {% endif %}
+  {% endif %}
+
+  {% if section.settings.items_per_row_mobile == "mobile_two_per_row" %}
+  {% assign classes_grid = classes_grid | append: " CollectionGrid--Mobile__Grid" %}
+  {% endif %}
+
+  {% case block.type %}
+  {% when 'image' %}
+  {% assign image_url = block.settings.collection_image | img_url: '1x1' | replace: '_1x1.', '_{width}x.' %}
+  <div class="{{ classes_grid }}" {% if settings.enable_animations %} {% assign modulFor=forloop.index0 | modulo: 2 %}
+    {% if modulFor==0 %} data-animation="elementFromLeftBig" {% else %} data-animation="elementFromRightBig" {% endif
+    %}{% endif %}>
+    <a href="{{ block.settings.image_link_url }}" class="CollectionGrid--ImageWrapper zoomImg ImageSize--{{ section.settings.image_size }}
+				{% if settings.enable_animations %}animatedContent{% endif %}
+				{% if section.settings.apply_overlay %}Image--contrast{% endif %}" data-number="{{ forloop.index }}">
+      {% if block.settings.image_link_url != blank %}
+      <div class="CollectionGrid--Image__Link" aria-label="Collection item">
+        {% endif %}
+        {% if block.settings.collection_image != blank %}
+        <img class="CollectionGrid__Image lazyload Image--FadeIn noJSHide" data-expand="-120" data-src="{{ image_url }}"
+          data-optimumx="1.4"
+          data-widths="[400, 600, 800, 1000, 1200, 1400, 1600, 1800, 2000, 2200, 2400, 2600, 2800, 3000]"
+          data-sizes="auto" alt="{{ block.settings.collection_image.alt | escape }}">
+        <noscript>
+          <img class="CollectionGrid__Image" src="{{ block.settings.collection_image | image_url: height: 1200 }}"
+            alt="{{ block.settings.collection_image.alt | escape }}">
+        </noscript>
+        {% else %}
+        <div class="CollectionGrid__Image lazyload Image--FadeIn noJSHide">
+          {%- capture image -%}collection-{% cycle '1', '2', '3', '4', '5' %}{% endcapture %}
+          {{ image | placeholder_svg_tag: 'placeholder-svg' }}
+        </div>
+        {% endif %}
+        {% if block.settings.image_link_url != blank %}
+      </div>
+      {% endif %}
+      {% if block.settings.image_title != blank or block.settings.image_text != blank %}
+      <div class="CollectionGrid--Content">
+        {% if block.settings.image_title != blank %} <h3
+          class="CollectionGrid--Title u-l1 {% if section.settings.items_per_row_mobile == " mobile_two_per_row" %}
+          CollectionGrid--GridFont__Size {% endif %} ">
+				{{
+				block.settings.image_title
+				}}
+			</h3>{% endif %}
+			{% if block.settings.image_text != blank %}<p class=" CollectionGrid--Description u-p4 mt-m">
+          {{
+          block.settings.image_text
+          }}
+          </p>{% endif %}
+
+          {% if block.settings.image_button != nil %}
+          {% render 'buttons',
+          classes: "mt-sxl u-pb1 CollectionGrid--HoverButton noJSshow",
+          notLinkable: true,
+          text: block.settings.image_button,
+          button_state: section.settings.button_type,
+          button_size: "Normal",
+          show_icon: false %}
+
+
+          {% endif %}
+      </div>
+      {% endif %}
+    </a>
+  </div>
+  {% when 'video' %}
+
+  <link rel="stylesheet" href="{{ 'videojs.css' | asset_url }}" media="print" onload="this.media='all'">
+  <noscript>{{ 'videojs.css' | asset_url | stylesheet_tag }}</noscript>
+  {% capture section_settings %}
+  {
+  "using_fade":{{ section.settings.transition_option | json }},
+  "control_var": true,
+  "autoplay": {{ block.settings.autoplay | json }},
+  "muted": {{ block.settings.muted | json }},
+  "controls": {{ block.settings.controls | json }},
+  "plh_desk": {% if block.settings.poster_urld != blank %}{{ block.settings.poster_urld | image_url | json }}{%
+  else %}""{% endif %},
+  "plh_mob": {% if block.settings.poster_urlm != blank %}{{ block.settings.poster_urlm | image_url | json }}{%
+  else %}""{% endif %},
+  "plh": {{ block.settings.plh | json }},
+  "viewport": {{ block.settings.viewport | json }},
+  "loop": {{ block.settings.loop | json }},
+  "videom": {{ block.settings.video_urlm | json }},
+  "videod": {{ block.settings.video_urld | json }},
+  "pause":{{ block.settings.viewport_pause | json }}
+  }
+  {% endcapture %}
+
+  <div class="{{ classes_grid }}" {% if settings.enable_animations %} {% assign modulFor=forloop.index0 | modulo: 2 %}
+    {% if modulFor==0 %} data-animation="elementFromLeftBig" {% else %} data-animation="elementFromRightBig" {% endif
+    %}{% endif %}>
+    <a href="{{ block.settings.image_link_url }}" class="CollectionGrid--ImageWrapper zoomImg ImageSize--{{ section.settings.image_size }}
+				{% if settings.enable_animations %}animatedContent{% endif %}
+					{% if section.settings.apply_overlay %}Image--contrast{% endif %} lazyload" data-number="{{ forloop.index }}"
+      data-script="{{ 'video.min.js' | asset_url }}">
+      {% if block.settings.image_link_url != blank %}
+      <div class="CollectionGrid--Image__Link">
+        {% endif %}
+
+        <video-component data-section-settings='{{ section_settings }}'>
+          <template>
+            <div class="videoHolder {% if settings.enable_animations %}Image--ScaleIn animatedContent{% endif %}"
+              style="display:none;">
+              <video id="my-player-{{ media.id }}" class="video-js">
+
+              </video>
+            </div>
+          </template>
+        </video-component>
+        <noscript><video class="videoHolder" autoplay muted playsinline loop
+            src="{{ block.settings.video_urld }}"></video></noscript>
+
+
+        {% if block.settings.image_link_url != blank %}
+      </div>
+      {% endif %}
+      {% if block.settings.image_title != blank or block.settings.image_text != blank %}
+      <div class="CollectionGrid--Content">
+        {% if block.settings.image_title != blank %} <h3
+          class="CollectionGrid--Title u-l1 {% if section.settings.items_per_row_mobile == " mobile_two_per_row" %}
+          CollectionGrid--GridFont__Size {% endif %} ">
+							{{
+							block.settings.image_title
+							}}
+						</h3>{% endif %}
+						{% if block.settings.image_text != blank %}<p class=" CollectionGrid--Description u-p4 mt-m">
+          {{
+          block.settings.image_text
+          }}
+          </p>{% endif %}
+
+          {% if block.settings.image_button != nil %}
+          {% render 'buttons',
+          classes: "mt-sxl u-pb1 CollectionGrid--HoverButton noJSshow",
+          notLinkable: true,
+          text: block.settings.image_button,
+          button_state: section.settings.button_type,
+          button_size: "Normal",
+          show_icon: false %}
+
+
+          {%
+          endif %}
+      </div>
+      {% endif %}
+    </a>
+  </div>
+
+  {% endcase %}
+  {% endfor %}
+
+</animation-wrapper>
+
+
+{% schema %}
+{
+"name": "Collection grid",
+"settings": [
+{
+"type": "select",
+"id": "colorGroup",
+"options": [
+{
+"value": "primary",
+"label": "First"
+},
+{
+"value": "secondary",
+"label": "Second"
+},
+{
+"value": "misc",
+"label": "Third"
+}
+],
+"default": "primary",
+"label": "Color group"
+},
+{
+"type": "header",
+"content": "Layout settings"
+},
+{
+"type": "select",
+"id": "grid_type",
+"label": "Number of items per row on desktop",
+"options": [
+{
+"value": "2_Masonary",
+"label": "2 per row (Masonary)"
+},
+{
+"value": "2_Grid",
+"label": "2 per row (Grid)"
+},
+{
+"value": "1_per_row",
+"label": "1 per row"
+}
+],
+"default": "2_Masonary"
+},
+{
+"type": "select",
+"id": "items_per_row_mobile",
+"label": "Number of items per row on mobile",
+"options": [
+{
+"value": "mobile_two_per_row",
+"label": "2 per row"
+},
+{
+"value": "mobile_one_per_row",
+"label": "1 per row"
+}
+],
+"default": "mobile_one_per_row"
+},
+{
+"type": "select",
+"id": "image_size",
+"label": "Image size (desktop and mobile)",
+"options": [
+{
+"value": "Small",
+"label": "Small"
+},
+{
+"value": "Default",
+"label": "Medium "
+},
+{
+"value": "Large",
+"label": "Large "
+}
+],
+"default": "Default"
+},
+{
+"type": "checkbox",
+"default": true,
+"label": "Use overlay",
+"id": "apply_overlay"
+},
+{
+"type": "select",
+"id": "button_type",
+"label": "Button type",
+"options": [
+{
+"value": "Primary",
+"label": "Primary"
+},
+{
+"value": "Secondary",
+"label": "Secondary"
+},
+{
+"value": "colorGroup",
+"label": "Color group"
+}
+],
+"default": "Primary"
+}
+],
+"blocks": [
+{
+"name": "Image",
+"type": "image",
+"settings": [
+{
+"type": "header",
+"content": "Image settings"
+},
+{
+"type": "text",
+"id": "image_title",
+"label": "Heading",
+"default": "Collection title"
+},
+{
+"type": "textarea",
+"id": "image_text",
+"label": "Text",
+"default": "Collection text"
+},
+{
+"type": "image_picker",
+"id": "collection_image",
+"label": "Select an image"
+},
+{
+"type": "header",
+"content": "Button settings"
+},
+{
+"type": "text",
+"id": "image_button",
+"label": "Button text",
+"default": "SHOP ALL FLAWORS"
+},
+{
+"type": "url",
+"id": "image_link_url",
+"label": "Button link"
+}
+]
+},
+{
+"name": "Video",
+"type": "video",
+"settings": [
+{
+"type": "header",
+"content": "Video settings"
+},
+{
+"type": "text",
+"id": "video_urld",
+"label": "Video URL for desktop (.mp4, hosted on Shopify, Amazon, Dropbox etc)"
+},
+{
+"type": "image_picker",
+"id": "poster_urld",
+"label": "Thumbnail for desktop"
+},
+{
+"type": "text",
+"id": "video_urlm",
+"label": "Video URL for mobile (.mp4, hosted on Shopify, Amazon, Dropbox etc)"
+},
+{
+"type": "image_picker",
+"id": "poster_urlm",
+"label": "Thumbnail for mobile"
+},
+{
+"type": "checkbox",
+"id": "muted",
+"label": "Muted",
+"default": true
+},
+{
+"type": "checkbox",
+"id": "controls",
+"label": "Controls",
+"default": true
+},
+{
+"type": "checkbox",
+"id": "plh",
+"label": "Thumbnail",
+"default": true
+},
+{
+"type": "checkbox",
+"id": "loop",
+"label": "Loop",
+"default": true
+},
+{
+"type": "checkbox",
+"id": "viewport",
+"label": "Play when in view",
+"default": true
+},
+{
+"type": "checkbox",
+"id": "viewport_pause",
+"label": "Pause when out of view",
+"default": true
+},
+{
+"type": "text",
+"id": "image_title",
+"label": "Heading",
+"default": "Collection title"
+},
+{
+"type": "textarea",
+"id": "image_text",
+"label": "Text",
+"default": "Collection text"
+},
+{
+"type": "header",
+"content": "Button settings"
+},
+{
+"type": "text",
+"id": "image_button",
+"label": "Button text",
+"default": "SHOP ALL FLAWORS"
+},
+{
+"type": "url",
+"id": "image_link_url",
+"label": "Image link"
+}
+]
+}
+],
+"presets": [
+{
+"category": "collections",
+"name": "Collection grid",
+"blocks": [
+{
+"type": "image"
+},
+{
+"type": "image"
+},
+{
+"type": "image"
+},
+{
+"type": "image"
+}
+],
+"settings": {
+}
+}
+]
+}
+{% endschema %}
