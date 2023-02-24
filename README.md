@@ -1,13 +1,12 @@
 ﻿# Video mosaic
 
-This section is used to show collections (or any other sort of content) and has a functionality where video can be used instead of image
+This section was intended to show collections (but can be used for any other sort of content) and has a functionality where video can be used instead of image
 
-The image, video, title, button and link can all be changed trough customize, so user is not only locked to use this section for collections, even thought that was the main purpose.
-
-
+The image, video, title, button, link grid layout separetely for desktop and mobile can all be changed trough customize.
 
 
-[Image preview of section](https://prnt.sc/4uF_RhNa4QgQ)
+
+[Video preview of section](https://gyazo.com/518a1b1fafd10ff687b310dad5d593f1)
 
 ## Note
 Main css file and video API libraries are not included in this showcase
