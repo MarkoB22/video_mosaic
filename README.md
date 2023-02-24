@@ -2,7 +2,7 @@
 
 This section was intended to show collections (but can be used for any other sort of content) and has a functionality where video can be used instead of image
 
-The image, video, title, button, link grid layout separetely for desktop and mobile can all be changed trough customize.
+The image, video, title, button, link and grid layout (separetely for desktop and mobile) can all be changed trough customize.
 
 
 
