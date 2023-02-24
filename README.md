@@ -1,4 +1,4 @@
-﻿# Video mosaic - used for collection grid
+﻿# Video mosaic
 
 This section is used to show collections (or any other sort of content) and has a functionality where video can be used instead of image
 
